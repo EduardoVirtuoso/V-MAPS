@@ -1,0 +1,29 @@
+import arcpy
+
+
+#Variaveis:
+main_SP_MUN = "C:\\Users\\eduar\\OneDrive\\Área de Trabalho\\CASE\\Teste_Select\\Vetores\\SP_MUN.gpkg\\main.SP_MUN"
+SHAPES_MUN = "C:\\Users\\eduar\\OneDrive\\Área de Trabalho\\CASE\\exercicios\\SHAPES MUN"
+MUN_EM_SHP = SHAPES_MUN
+gis_osm_pois_free_1 = "gis_osm_pois_free_1"
+Hospitais = gis_osm_pois_free_1
+HOSPITAIS_CAMP_SP = Hospitais
+main_SP_MUN__2_ = "main_SP_MUN"
+CAMPINAS_E_SP = main_SP_MUN__2_
+HOSPITAS_EM_CAMPINAS_E_SP_shp = "C:\\Users\\eduar\\OneDrive\\Área de Trabalho\\CASE\\exercicios\\RESULTADOS\\HOSPITAS_EM_CAMPINAS_E_SP.shp"
+
+# Converter do formato geopackage para shapefile(para facilitar manuseio)
+arcpy.FeatureClassToShapefile_conversion("'C:\\Users\\eduar\\OneDrive\\Área de Trabalho\\CASE\\Teste_Select\\Vetores\\SP_MUN.gpkg\\main.SP_MUN'", SHAPES_MUN)
+
+# Selecionar os hospitais
+arcpy.SelectLayerByAttribute_management(gis_osm_pois_free_1, "NEW_SELECTION", "\"fclass\" = 'hospital'")
+
+# Selecionar os municípios de de interesse
+arcpy.SelectLayerByAttribute_management(main_SP_MUN__2_, "NEW_SELECTION", "\"NM_MUNICIP\" IN( 'CAMPINAS' , 'SÃƒO PAULO' )")
+
+# Selecionar os hospitais nos municípios previamente selecionados.
+arcpy.SelectLayerByLocation_management(Hospitais, "COMPLETELY_WITHIN", CAMPINAS_E_SP, "", "NEW_SELECTION", "NOT_INVERT")
+
+# Exportar o produto em shapefile
+arcpy.CopyFeatures_management(HOSPITAIS_CAMP_SP, HOSPITAS_EM_CAMPINAS_E_SP_shp, "", "0", "0", "0")
+
