@@ -1,0 +1,12 @@
+#Como exportar um lote de arquivos do formato Geopackage para outro formato(no exemplo foi usado GeoJSON)
+
+#Definir o "Output"
+Diretoriodesaida = r"Diretorio/...../...."
+
+#Identificar todas as camadas do projeto usando "iface.mapCanvas().layers()", realizar o loop pelas camadas e exporta-las. 
+layers = iface.mapCanvas().layers()
+for layer in layers:
+    layerType = layer.type()
+    if layerType == QgsMapLayer.VectorLayer:
+        print (layer.name())
+        QgsVectorFileWriter.writeAsVectorFormat( layer, Diretoriodesaida + layer.name() + ".GeoJSON", "utf-8", layer.crs(), "GeoJSON")
